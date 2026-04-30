@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.hisabkitaab.R
@@ -23,6 +24,12 @@ import java.util.Date
 import java.util.Locale
 
 class TransactionEntryFragment : Fragment() {
+    private val viewModel: TransactionViewModel by viewModels {
+        TransactionViewModelFactory(
+            TransactionRepository(KitaabDatabase(requireContext()).getTransactionDao())
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,10 +49,9 @@ class TransactionEntryFragment : Fragment() {
         toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        val txRepo = TransactionRepository(KitaabDatabase(requireContext()).getTransactionDao())
         lifecycleScope.launch {
-            val tx = withContext(Dispatchers.IO) { txRepo.getTransactionById(transactionId) } ?: return@launch
-            val isDiye = tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)
+            val tx = withContext(Dispatchers.IO) { viewModel.getTransactionById(transactionId) } ?: return@launch
+            val isDiye = viewModel.isDiyeType(tx.type)
             toolbar.title = if (isDiye) "Maine diye" else "Maine liye"
             saveButton.backgroundTintList = android.content.res.ColorStateList.valueOf(
                 android.graphics.Color.parseColor(if (isDiye) "#FF4B5F" else "#10B760")
@@ -57,7 +63,7 @@ class TransactionEntryFragment : Fragment() {
             saveButton.setOnClickListener {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        txRepo.updateTransaction(
+                        viewModel.updateTransaction(
                             tx.copy(
                                 amount = amountEt.text.toString().toDoubleOrNull() ?: tx.amount,
                                 note = noteEt.text.toString()

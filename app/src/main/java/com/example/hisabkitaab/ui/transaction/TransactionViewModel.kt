@@ -19,4 +19,18 @@ class TransactionViewModel(
     suspend fun getTransactions(customerId: Int): List<Transaction> {
         return repository.getTransactions(customerId)
     }
+
+    suspend fun getTransactionById(transactionId: Int): Transaction? {
+        return repository.getTransactionById(transactionId)
+    }
+
+    suspend fun updateTransaction(transaction: Transaction) {
+        repository.updateTransaction(transaction)
+    }
+
+    fun isDiyeType(type: String): Boolean {
+        return type.equals("add", true) ||
+            type.equals("debit", true) ||
+            type.equals("lene", true)
+    }
 }
