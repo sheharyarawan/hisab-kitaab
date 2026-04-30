@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
+import com.example.hisabkitaab.data.model.CustomerTransactionUiModel
 import com.example.hisabkitaab.data.repository.CustomerRepository
 import com.example.hisabkitaab.data.repository.TransactionRepository
 import com.example.hisabkitaab.data.room.KitaabDatabase
@@ -102,7 +103,7 @@ class CustomerDetailFragment : Fragment() {
             val rows = transactions.map { tx ->
                 val isDiye = tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)
                 val isLiye = tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)
-                CustomerTransactionUi(
+                CustomerTransactionUiModel(
                     transactionId = tx.id,
                     transactionType = tx.type,
                     amount = tx.amount,
