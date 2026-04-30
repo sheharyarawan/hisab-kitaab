@@ -9,7 +9,8 @@ import com.example.hisabkitaab.R
 import com.example.hisabkitaab.data.model.CustomerTransactionUiModel
 
 class CustomerTransactionAdapter(
-    private val onItemClick: (CustomerTransactionUiModel) -> Unit
+    private val onItemClick: (CustomerTransactionUiModel) -> Unit,
+    private val onItemLongClick: (CustomerTransactionUiModel) -> Unit
 ) : RecyclerView.Adapter<CustomerTransactionAdapter.TransactionViewHolder>() {
     private val items = mutableListOf<CustomerTransactionUiModel>()
 
@@ -22,7 +23,7 @@ class CustomerTransactionAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_customer_transaction, parent, false)
-        return TransactionViewHolder(view, onItemClick)
+        return TransactionViewHolder(view, onItemClick, onItemLongClick)
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
@@ -33,7 +34,8 @@ class CustomerTransactionAdapter(
 
     class TransactionViewHolder(
         itemView: View,
-        private val onItemClick: (CustomerTransactionUiModel) -> Unit
+        private val onItemClick: (CustomerTransactionUiModel) -> Unit,
+        private val onItemLongClick: (CustomerTransactionUiModel) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val dateView: TextView = itemView.findViewById(R.id.tvItemDate)
         private val noteView: TextView = itemView.findViewById(R.id.tvItemNote)
@@ -48,6 +50,10 @@ class CustomerTransactionAdapter(
             diyeView.text = item.diyeText
             liyeView.text = item.liyeText
             itemView.setOnClickListener { onItemClick(item) }
+            itemView.setOnLongClickListener {
+                onItemLongClick(item)
+                true
+            }
         }
     }
 }

@@ -13,7 +13,8 @@ import com.example.hisabkitaab.data.model.CustomerBalance
 import kotlin.math.abs
 
 class CustomerAdapter(
-    private val onItemClick: (CustomerBalance) -> Unit
+    private val onItemClick: (CustomerBalance) -> Unit,
+    private val onItemLongClick: (CustomerBalance) -> Unit
 ) : ListAdapter<CustomerBalance, CustomerAdapter.CustomerViewHolder>(DiffCallback) {
 
     object DiffCallback : DiffUtil.ItemCallback<CustomerBalance>() {
@@ -28,7 +29,7 @@ class CustomerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_customer, parent, false)
-        return CustomerViewHolder(view, onItemClick)
+        return CustomerViewHolder(view, onItemClick, onItemLongClick)
     }
 
     override fun onBindViewHolder(holder: CustomerViewHolder, position: Int) {
@@ -37,7 +38,8 @@ class CustomerAdapter(
 
     class CustomerViewHolder(
         itemView: View,
-        private val onItemClick: (CustomerBalance) -> Unit
+        private val onItemClick: (CustomerBalance) -> Unit,
+        private val onItemLongClick: (CustomerBalance) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val initialsView: TextView = itemView.findViewById(R.id.tvInitials)
         private val nameView: TextView = itemView.findViewById(R.id.customerName)
@@ -63,6 +65,10 @@ class CustomerAdapter(
 
             itemView.setOnClickListener {
                 onItemClick(item)
+            }
+            itemView.setOnLongClickListener {
+                onItemLongClick(item)
+                true
             }
         }
     }

@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -39,14 +40,31 @@ class CustomerFragment : Fragment() {
         val searchView = view.findViewById<EditText>(R.id.etSearchCustomer)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewCustomers)
         val addButton = view.findViewById<Button>(R.id.btnAddCustomer)
+        val db = KitaabDatabase(requireContext())
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CustomerAdapter { item ->
-            findNavController().navigate(
-                R.id.action_customerFragment_to_customerDetailFragment,
-                bundleOf("arg_customer_id" to item.customerId)
-            )
-        }
+        adapter = CustomerAdapter(
+            onItemClick = { item ->
+                findNavController().navigate(
+                    R.id.action_customerFragment_to_customerDetailFragment,
+                    bundleOf("arg_customer_id" to item.customerId)
+                )
+            },
+            onItemLongClick = { item ->
+                showDeleteDialog(
+                    message = "Delete ${item.name} and all entries?",
+                    onConfirm = {
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.IO) {
+                                db.getTransactionDao().deleteCustomerTransactions(item.customerId)
+                                db.getCustomerDao().getCustomerById(item.customerId).let { db.getCustomerDao().deleteCustomer(it) }
+                            }
+                            loadCustomerRows(totalDebitView, totalCreditView)
+                        }
+                    }
+                )
+            }
+        )
         recyclerView.adapter = adapter
 
         // Keeping add button inactive for now as requested.
@@ -123,5 +141,16 @@ class CustomerFragment : Fragment() {
 
         totalDebitView.text = "Rs. ${redTotal.toInt()}"
         totalCreditView.text = "Rs. ${greenTotal.toInt()}"
+    }
+
+    private fun showDeleteDialog(message: String, onConfirm: () -> Unit) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Delete")
+            .setMessage(message)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete") { _, _ -> onConfirm() }
+            .create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
     }
 }

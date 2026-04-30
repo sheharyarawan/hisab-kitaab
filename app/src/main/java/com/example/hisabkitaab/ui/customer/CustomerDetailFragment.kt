@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -28,15 +29,33 @@ import java.util.Locale
 import kotlin.math.abs
 
 class CustomerDetailFragment : Fragment() {
-    private val transactionAdapter = CustomerTransactionAdapter { item ->
-        findNavController().navigate(
-            R.id.action_customerDetailFragment_to_transactionDetailFragment,
-            bundleOf(
-                "arg_transaction_id" to item.transactionId,
-                "arg_customer_id" to (arguments?.getInt(ARG_CUSTOMER_ID) ?: 0)
+    private val transactionAdapter = CustomerTransactionAdapter(
+        onItemClick = { item ->
+            findNavController().navigate(
+                R.id.action_customerDetailFragment_to_transactionDetailFragment,
+                bundleOf(
+                    "arg_transaction_id" to item.transactionId,
+                    "arg_customer_id" to (arguments?.getInt(ARG_CUSTOMER_ID) ?: 0)
+                )
             )
-        )
-    }
+        },
+        onItemLongClick = { item ->
+            showDeleteDialog(
+                message = "Delete this entry?",
+                onConfirm = {
+                    arguments?.getInt(ARG_CUSTOMER_ID)?.let { customerId ->
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.IO) {
+                                val repo = TransactionRepository(KitaabDatabase(requireContext()).getTransactionDao())
+                                repo.deleteTransactionById(item.transactionId)
+                            }
+                            loadCustomerData(customerId)
+                        }
+                    }
+                }
+            )
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,59 +86,77 @@ class CustomerDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Maine Liye screen next", Toast.LENGTH_SHORT).show()
         }
 
-        val db = KitaabDatabase(requireContext())
-        val customerRepo = CustomerRepository(db.getCustomerDao())
-        val txRepo = TransactionRepository(db.getTransactionDao())
-
-        lifecycleScope.launch {
-            val customer = withContext(Dispatchers.IO) { customerRepo.getCustomerById(customerId) }
-            val transactions = withContext(Dispatchers.IO) { txRepo.getTransactions(customerId) }
-
-            val debitTotal = transactions.filter {
-                it.type.equals("add", true) || it.type.equals("debit", true) || it.type.equals("lene", true)
-            }.sumOf { it.amount }
-            val creditTotal = transactions.filter {
-                it.type.equals("del", true) || it.type.equals("credit", true) || it.type.equals("dene", true)
-            }.sumOf { it.amount }
-            val net = creditTotal - debitTotal
-
-            toolbar.title = customer.name
-            summaryAmountView.text = "Rs. ${abs(net).toInt()}"
-            summaryLabelView.text = if (net >= 0) "Maine dene hain" else "Maine lene hain"
-
-            val oldestToNewest = transactions.sortedBy { it.date }
-            var runningBalance = 0.0
-            val runningBalanceById = mutableMapOf<Int, Double>()
-            oldestToNewest.forEach { tx ->
-                if (tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)) {
-                    runningBalance -= tx.amount
-                } else if (tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)) {
-                    runningBalance += tx.amount
-                }
-                runningBalanceById[tx.id] = runningBalance
-            }
-
-            val formatter = SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault())
-            val rows = transactions.map { tx ->
-                val isDiye = tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)
-                val isLiye = tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)
-                CustomerTransactionUiModel(
-                    transactionId = tx.id,
-                    transactionType = tx.type,
-                    amount = tx.amount,
-                    dateMillis = tx.date,
-                    dateText = formatter.format(Date(tx.date)),
-                    noteText = tx.note?.ifBlank { "-" } ?: "-",
-                    balanceText = "Bal. Rs. ${(runningBalanceById[tx.id] ?: 0.0).toInt()}",
-                    diyeText = if (isDiye) "Rs. ${tx.amount.toInt()}" else "",
-                    liyeText = if (isLiye) "Rs. ${tx.amount.toInt()}" else ""
-                )
-            }
-            transactionAdapter.submitList(rows)
-        }
+        lifecycleScope.launch { loadCustomerData(customerId) }
     }
 
     companion object {
         private const val ARG_CUSTOMER_ID = "arg_customer_id"
+    }
+
+    private suspend fun loadCustomerData(customerId: Int) {
+        val view = view ?: return
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbarCustomerDetail)
+        val summaryAmountView = view.findViewById<TextView>(R.id.tvSummaryAmount)
+        val summaryLabelView = view.findViewById<TextView>(R.id.tvSummaryLabel)
+
+        val db = KitaabDatabase(requireContext())
+        val customerRepo = CustomerRepository(db.getCustomerDao())
+        val txRepo = TransactionRepository(db.getTransactionDao())
+
+        val customer = withContext(Dispatchers.IO) { customerRepo.getCustomerById(customerId) }
+        val transactions = withContext(Dispatchers.IO) { txRepo.getTransactions(customerId) }
+
+        val debitTotal = transactions.filter {
+            it.type.equals("add", true) || it.type.equals("debit", true) || it.type.equals("lene", true)
+        }.sumOf { it.amount }
+        val creditTotal = transactions.filter {
+            it.type.equals("del", true) || it.type.equals("credit", true) || it.type.equals("dene", true)
+        }.sumOf { it.amount }
+        val net = creditTotal - debitTotal
+
+        toolbar.title = customer.name
+        summaryAmountView.text = "Rs. ${abs(net).toInt()}"
+        summaryLabelView.text = if (net >= 0) "Maine dene hain" else "Maine lene hain"
+
+        val oldestToNewest = transactions.sortedBy { it.date }
+        var runningBalance = 0.0
+        val runningBalanceById = mutableMapOf<Int, Double>()
+        oldestToNewest.forEach { tx ->
+            if (tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)) {
+                runningBalance -= tx.amount
+            } else if (tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)) {
+                runningBalance += tx.amount
+            }
+            runningBalanceById[tx.id] = runningBalance
+        }
+
+        val formatter = SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault())
+        val rows = transactions.map { tx ->
+            val isDiye = tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)
+            val isLiye = tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)
+            CustomerTransactionUiModel(
+                transactionId = tx.id,
+                transactionType = tx.type,
+                amount = tx.amount,
+                dateMillis = tx.date,
+                dateText = formatter.format(Date(tx.date)),
+                noteText = tx.note?.ifBlank { "-" } ?: "-",
+                balanceText = "Bal. Rs. ${(runningBalanceById[tx.id] ?: 0.0).toInt()}",
+                diyeText = if (isDiye) "Rs. ${tx.amount.toInt()}" else "",
+                liyeText = if (isLiye) "Rs. ${tx.amount.toInt()}" else ""
+            )
+        }
+        transactionAdapter.submitList(rows)
+    }
+
+    private fun showDeleteDialog(message: String, onConfirm: () -> Unit) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Delete")
+            .setMessage(message)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete") { _, _ -> onConfirm() }
+            .create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
     }
 }

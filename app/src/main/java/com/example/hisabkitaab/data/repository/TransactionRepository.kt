@@ -23,6 +23,10 @@ class TransactionRepository(
         transactionDao.updateTransaction(transaction)
     }
 
+    suspend fun deleteTransactionById(transactionId: Int) {
+        transactionDao.deleteTransactionById(transactionId)
+    }
+
     suspend fun deleteCustomerTransactions(customerId: Int) {
         transactionDao.deleteCustomerTransactions(customerId)
     }
