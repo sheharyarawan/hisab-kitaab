@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">HisabKitaab</string>
+    <string name="customer_toolbar_name">SHEHARYAR</string>
+    <string name="customer_debit_amount">Rs. 0</string>
+    <string name="customer_debit_label">Maine lene hain</string>
+    <string name="customer_credit_amount">Rs. 0</string>
+    <string name="customer_credit_label">Maine dene hain</string>
+    <string name="search_customer_hint">Search Customer</string>
+    <string name="add_customer">Add Customer</string>
 </resources>
