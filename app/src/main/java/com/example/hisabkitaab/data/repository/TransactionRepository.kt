@@ -15,6 +15,14 @@ class TransactionRepository(
         return transactionDao.getTransactions(customerId)
     }
 
+    suspend fun getTransactionById(transactionId: Int): Transaction? {
+        return transactionDao.getTransactionById(transactionId)
+    }
+
+    suspend fun updateTransaction(transaction: Transaction) {
+        transactionDao.updateTransaction(transaction)
+    }
+
     suspend fun deleteCustomerTransactions(customerId: Int) {
         transactionDao.deleteCustomerTransactions(customerId)
     }

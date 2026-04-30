@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,7 +27,15 @@ import java.util.Locale
 import kotlin.math.abs
 
 class CustomerDetailFragment : Fragment() {
-    private val transactionAdapter = CustomerTransactionAdapter()
+    private val transactionAdapter = CustomerTransactionAdapter { item ->
+        findNavController().navigate(
+            R.id.action_customerDetailFragment_to_transactionDetailFragment,
+            bundleOf(
+                "arg_transaction_id" to item.transactionId,
+                "arg_customer_id" to (arguments?.getInt(ARG_CUSTOMER_ID) ?: 0)
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,6 +103,10 @@ class CustomerDetailFragment : Fragment() {
                 val isDiye = tx.type.equals("add", true) || tx.type.equals("debit", true) || tx.type.equals("lene", true)
                 val isLiye = tx.type.equals("del", true) || tx.type.equals("credit", true) || tx.type.equals("dene", true)
                 CustomerTransactionUi(
+                    transactionId = tx.id,
+                    transactionType = tx.type,
+                    amount = tx.amount,
+                    dateMillis = tx.date,
                     dateText = formatter.format(Date(tx.date)),
                     noteText = tx.note?.ifBlank { "-" } ?: "-",
                     balanceText = "Bal. Rs. ${(runningBalanceById[tx.id] ?: 0.0).toInt()}",

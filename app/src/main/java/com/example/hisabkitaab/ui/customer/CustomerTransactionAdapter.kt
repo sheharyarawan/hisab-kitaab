@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
 
 data class CustomerTransactionUi(
+    val transactionId: Int,
+    val transactionType: String,
+    val amount: Double,
+    val dateMillis: Long,
     val dateText: String,
     val noteText: String,
     val balanceText: String,
@@ -15,7 +19,9 @@ data class CustomerTransactionUi(
     val liyeText: String
 )
 
-class CustomerTransactionAdapter : RecyclerView.Adapter<CustomerTransactionAdapter.TransactionViewHolder>() {
+class CustomerTransactionAdapter(
+    private val onItemClick: (CustomerTransactionUi) -> Unit
+) : RecyclerView.Adapter<CustomerTransactionAdapter.TransactionViewHolder>() {
     private val items = mutableListOf<CustomerTransactionUi>()
 
     fun submitList(newItems: List<CustomerTransactionUi>) {
@@ -27,7 +33,7 @@ class CustomerTransactionAdapter : RecyclerView.Adapter<CustomerTransactionAdapt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_customer_transaction, parent, false)
-        return TransactionViewHolder(view)
+        return TransactionViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
@@ -36,7 +42,10 @@ class CustomerTransactionAdapter : RecyclerView.Adapter<CustomerTransactionAdapt
 
     override fun getItemCount(): Int = items.size
 
-    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TransactionViewHolder(
+        itemView: View,
+        private val onItemClick: (CustomerTransactionUi) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         private val dateView: TextView = itemView.findViewById(R.id.tvItemDate)
         private val noteView: TextView = itemView.findViewById(R.id.tvItemNote)
         private val balanceView: TextView = itemView.findViewById(R.id.tvItemBalance)
@@ -49,6 +58,7 @@ class CustomerTransactionAdapter : RecyclerView.Adapter<CustomerTransactionAdapt
             balanceView.text = item.balanceText
             diyeView.text = item.diyeText
             liyeView.text = item.liyeText
+            itemView.setOnClickListener { onItemClick(item) }
         }
     }
 }

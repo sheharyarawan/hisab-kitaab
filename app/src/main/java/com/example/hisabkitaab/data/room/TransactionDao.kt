@@ -12,6 +12,12 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE customerId = :customerId ORDER BY date DESC")
     suspend fun getTransactions(customerId: Int): List<Transaction>
 
+    @Query("SELECT * FROM transactions WHERE id = :transactionId LIMIT 1")
+    suspend fun getTransactionById(transactionId: Int): Transaction?
+
+    @Update
+    suspend fun updateTransaction(transaction: Transaction)
+
     @Query("DELETE FROM transactions WHERE customerId = :customerId")
     suspend fun deleteCustomerTransactions(customerId: Int)
 }
