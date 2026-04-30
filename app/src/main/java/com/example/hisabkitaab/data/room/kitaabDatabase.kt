@@ -1,4 +1,43 @@
 package com.example.hisabkitaab.data.room
 
-class kitaabDatabase {
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.example.hisabkitaab.data.entity.Customer
+import com.example.hisabkitaab.data.entity.Transaction
+
+@Database(
+    entities = [Customer::class, Transaction::class],
+    version = 1
+)
+abstract class KitaabDatabase : RoomDatabase() {
+
+    abstract fun getCustomerDao(): CustomerDao
+    abstract fun getTransactionDao(): TransactionDao
+
+    companion object {
+
+        @Volatile
+        private var instance: KitaabDatabase? = null
+        private val LOCK = Any()
+
+        operator fun invoke(context: Context): KitaabDatabase {
+            return instance ?: synchronized(LOCK) {
+                instance ?: createDatabase(context).also {
+                    instance = it
+                }
+            }
+        }
+
+        private fun createDatabase(context: Context): KitaabDatabase {
+            return Room.databaseBuilder(
+                context.applicationContext,
+                KitaabDatabase::class.java,
+                "kitaabDB"
+            )
+                .fallbackToDestructiveMigration()
+                .build()
+        }
+    }
 }
