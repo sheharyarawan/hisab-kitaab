@@ -2,7 +2,7 @@ package com.example.hisabkitaab.ui.transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Transaction
+import com.example.hisabkitaab.data.entity.Transaction
 import com.example.hisabkitaab.data.repository.TransactionRepository
 import kotlinx.coroutines.launch
 

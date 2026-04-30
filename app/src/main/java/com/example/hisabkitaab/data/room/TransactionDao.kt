@@ -1,6 +1,8 @@
 package com.example.hisabkitaab.data.room
 
 import androidx.room.*
+import com.example.hisabkitaab.data.entity.Transaction
+
 @Dao
 interface TransactionDao {
 

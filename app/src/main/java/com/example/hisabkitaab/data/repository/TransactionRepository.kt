@@ -1,6 +1,6 @@
 package com.example.hisabkitaab.data.repository
 
-import androidx.room.Transaction
+import com.example.hisabkitaab.data.entity.Transaction
 import com.example.hisabkitaab.data.room.TransactionDao
 
 class TransactionRepository(
