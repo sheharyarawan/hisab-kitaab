@@ -7,8 +7,8 @@ class CustomerRepository(
     private val customerDao: CustomerDao
 ) {
 
-    suspend fun insertCustomer(customer: Customer) {
-        customerDao.insertCustomer(customer)
+    suspend fun insertCustomer(customer: Customer): Long {
+        return customerDao.insertCustomer(customer)
     }
 
     suspend fun deleteCustomer(customer: Customer) {

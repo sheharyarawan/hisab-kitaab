@@ -38,7 +38,14 @@ class TransactionEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val transactionId = arguments?.getInt("arg_transaction_id") ?: return
+        val args = arguments
+        val transactionId = if (args != null && args.containsKey("arg_transaction_id")) {
+            args.getInt("arg_transaction_id")
+        } else {
+            null
+        }
+        val customerId = arguments?.getInt("arg_customer_id") ?: 0
+        val entryType = arguments?.getString("arg_entry_type")
 
         val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbarTransactionEntry)
         val amountEt = view.findViewById<EditText>(R.id.etEntryAmount)
@@ -49,28 +56,66 @@ class TransactionEntryFragment : Fragment() {
         toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        lifecycleScope.launch {
-            val tx = withContext(Dispatchers.IO) { viewModel.getTransactionById(transactionId) } ?: return@launch
-            val isDiye = viewModel.isDiyeType(tx.type)
+        val formatter = SimpleDateFormat("dd MMM, yy", Locale.getDefault())
+        dateTv.text = formatter.format(Date(System.currentTimeMillis()))
+
+        if (transactionId != null) {
+            lifecycleScope.launch {
+                val tx = withContext(Dispatchers.IO) { viewModel.getTransactionById(transactionId) } ?: return@launch
+                val isDiye = viewModel.isDiyeType(tx.type)
+                toolbar.title = if (isDiye) "Maine diye" else "Maine liye"
+                saveButton.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                    android.graphics.Color.parseColor(if (isDiye) "#FF4B5F" else "#10B760")
+                )
+                amountEt.setText(tx.amount.toInt().toString())
+                noteEt.setText(tx.note ?: "")
+                dateTv.text = formatter.format(Date(tx.date))
+
+                saveButton.setOnClickListener {
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            viewModel.updateTransaction(
+                                tx.copy(
+                                    amount = amountEt.text.toString().toDoubleOrNull() ?: tx.amount,
+                                    note = noteEt.text.toString()
+                                )
+                            )
+                        }
+                        Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        } else {
+            val isDiye = entryType.equals("diye", true)
             toolbar.title = if (isDiye) "Maine diye" else "Maine liye"
             saveButton.backgroundTintList = android.content.res.ColorStateList.valueOf(
                 android.graphics.Color.parseColor(if (isDiye) "#FF4B5F" else "#10B760")
             )
-            amountEt.setText(tx.amount.toInt().toString())
-            noteEt.setText(tx.note ?: "")
-            dateTv.text = SimpleDateFormat("dd MMM, yy", Locale.getDefault()).format(Date(tx.date))
 
             saveButton.setOnClickListener {
+                val amount = amountEt.text?.toString()?.toDoubleOrNull()
+                if (amount == null || amount <= 0) {
+                    Toast.makeText(requireContext(), "Enter amount", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (customerId == 0) {
+                    Toast.makeText(requireContext(), "Missing customer", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        viewModel.updateTransaction(
-                            tx.copy(
-                                amount = amountEt.text.toString().toDoubleOrNull() ?: tx.amount,
-                                note = noteEt.text.toString()
+                        viewModel.insertTransaction(
+                            com.example.hisabkitaab.data.entity.Transaction(
+                                customerId = customerId,
+                                amount = amount,
+                                type = if (isDiye) "add" else "del",
+                                note = noteEt.text?.toString()
                             )
                         )
                     }
-                    Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
                     findNavController().navigateUp()
                 }
             }

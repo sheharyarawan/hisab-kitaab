@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -80,10 +79,22 @@ class CustomerDetailFragment : Fragment() {
         transactionsRv.adapter = transactionAdapter
 
         diyeButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Maine Diye screen next", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(
+                R.id.action_customerDetailFragment_to_transactionEntryFragment,
+                bundleOf(
+                    "arg_customer_id" to customerId,
+                    "arg_entry_type" to "diye"
+                )
+            )
         }
         liyeButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Maine Liye screen next", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(
+                R.id.action_customerDetailFragment_to_transactionEntryFragment,
+                bundleOf(
+                    "arg_customer_id" to customerId,
+                    "arg_entry_type" to "liye"
+                )
+            )
         }
 
         lifecycleScope.launch { loadCustomerData(customerId) }

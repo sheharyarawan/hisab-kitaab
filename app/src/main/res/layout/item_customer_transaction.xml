@@ -18,7 +18,7 @@
             android:fontFamily="@font/poppins_medium"
             android:textColor="#424242"
             android:textSize="14sp"
-            android:textStyle="bold" />
+             />
 
         <TextView
             android:id="@+id/tvItemNote"
@@ -50,8 +50,7 @@
         android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:textColor="#FF4B5F"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvItemMaineLiye"
@@ -61,6 +60,6 @@
         android:fontFamily="@font/poppins_medium"
         android:gravity="center|end"
         android:textColor="#10B760"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="14sp"
+       />
 </LinearLayout>

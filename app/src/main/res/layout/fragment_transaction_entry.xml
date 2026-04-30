@@ -19,47 +19,51 @@
     <EditText
         android:id="@+id/etEntryAmount"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="70dp"
         android:layout_marginTop="10dp"
         android:background="@android:drawable/edit_text"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:fontFamily="@font/poppins_medium"
         android:hint="Rs 0"
         android:inputType="numberDecimal"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:paddingHorizontal="12dp"
+        android:textSize="20sp"
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/etEntryNote"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="70dp"
         android:layout_marginTop="12dp"
         android:background="@android:drawable/edit_text"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:fontFamily="@font/poppins_medium"
-        android:hint="Tafseel (optional)"
-        android:inputType="text"
-        android:textColor="@android:color/black" />
+        android:paddingHorizontal="12dp"
+        android:textColor="@color/black"
+        android:hint="Tafseel (optional)" />
 
     <TextView
         android:id="@+id/tvEntryDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="#EEF2F5"
-        android:fontFamily="@font/poppins_medium"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="10dp"
+        android:background="@drawable/bg_date_box"
         android:text="30th Apr, 26"
-        android:textColor="#4C4C4C" />
+        android:drawableStart="@drawable/ic_calendar"
+        android:drawablePadding="8dp"/>
 
     <Button
         android:id="@+id/btnSaveEntry"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#B8C7CF"
-        android:fontFamily="@font/poppins_medium"
         android:text="SAVE"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:fontFamily="@font/poppins_medium"
+        android:backgroundTint="#1A040404"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
 </LinearLayout>

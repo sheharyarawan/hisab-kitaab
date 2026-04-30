@@ -10,4 +10,6 @@
     <string name="more">More</string>
     <string name="maine_diye">Maine Diye</string>
     <string name="maine_liye">Maine Liye</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

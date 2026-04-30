@@ -53,12 +53,12 @@ class CustomerAdapter(
                 .ifBlank { "?" }
             nameView.text = item.name
 
-            val sign = when {
-                item.netAmount > 0 -> "+"
-                item.netAmount < 0 -> "-"
-                else -> ""
-            }
-            amountView.text = "Rs. $sign${abs(item.netAmount).toInt()}"
+//            val sign = when {
+//                item.netAmount > 0 -> "+"
+//                item.netAmount < 0 -> "-"
+//                else -> ""
+//            }
+            amountView.text = "Rs. ${abs(item.netAmount).toInt()}"
             amountView.setTextColor(
                 Color.parseColor(if (item.netAmount >= 0) "#1B9C5A" else "#E53935")
             )

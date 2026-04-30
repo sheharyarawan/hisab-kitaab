@@ -67,8 +67,9 @@ class CustomerFragment : Fragment() {
         )
         recyclerView.adapter = adapter
 
-        // Keeping add button inactive for now as requested.
-        addButton.setOnClickListener { }
+        addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_customerFragment_to_addCustomerListFragment)
+        }
 
         searchView.doAfterTextChanged {
             applyFilter(it?.toString().orEmpty(), totalDebitView, totalCreditView)

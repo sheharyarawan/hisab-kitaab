@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_customerFragment_to_customerDetailFragment"
             app:destination="@id/customerDetailFragment" />
+        <action
+            android:id="@+id/action_customerFragment_to_addCustomerListFragment"
+            app:destination="@id/addCustomerListFragment" />
     </fragment>
 
     <fragment
@@ -20,6 +23,30 @@
         <action
             android:id="@+id/action_customerDetailFragment_to_transactionDetailFragment"
             app:destination="@id/transactionDetailFragment" />
+        <action
+            android:id="@+id/action_customerDetailFragment_to_transactionEntryFragment"
+            app:destination="@id/transactionEntryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addCustomerListFragment"
+        android:name="com.example.hisabkitaab.ui.customer.add.AddCustomerListFragment"
+        android:label="Add customer">
+        <action
+            android:id="@+id/action_addCustomerListFragment_to_addCustomerManualFragment"
+            app:destination="@id/addCustomerManualFragment" />
+        <action
+            android:id="@+id/action_addCustomerListFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addCustomerManualFragment"
+        android:name="com.example.hisabkitaab.ui.customer.add.AddCustomerManualFragment"
+        android:label="Add customer">
+        <action
+            android:id="@+id/action_addCustomerManualFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
     </fragment>
 
     <fragment

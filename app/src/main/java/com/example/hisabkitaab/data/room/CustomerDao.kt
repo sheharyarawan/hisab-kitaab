@@ -7,7 +7,7 @@ import com.example.hisabkitaab.data.entity.Customer
 interface CustomerDao {
 
     @Insert
-    suspend fun insertCustomer(customer: Customer)
+    suspend fun insertCustomer(customer: Customer): Long
 
     @Delete
     suspend fun deleteCustomer(customer: Customer)

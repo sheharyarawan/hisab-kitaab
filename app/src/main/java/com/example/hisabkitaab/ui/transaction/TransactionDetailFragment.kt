@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -42,8 +41,8 @@ class TransactionDetailFragment : Fragment() {
         val customerId = arguments?.getInt("arg_customer_id") ?: 0
 
         val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbarTransactionDetail)
-        val amountEt = view.findViewById<EditText>(R.id.etDetailAmount)
-        val noteEt = view.findViewById<EditText>(R.id.etDetailNote)
+        val amountEt = view.findViewById<TextView>(R.id.etDetailAmount)
+        val noteEt = view.findViewById<TextView>(R.id.etDetailNote)
         val dateTv = view.findViewById<TextView>(R.id.tvDetailDate)
         val editButton = view.findViewById<Button>(R.id.btnEditTransaction)
 
@@ -54,8 +53,8 @@ class TransactionDetailFragment : Fragment() {
             val tx = withContext(Dispatchers.IO) { viewModel.getTransactionById(transactionId) } ?: return@launch
             val isDiye = viewModel.isDiyeType(tx.type)
             toolbar.title = if (isDiye) "Maine diye" else "Maine liye"
-            amountEt.setText("Rs. ${tx.amount.toInt()}")
-            noteEt.setText(tx.note ?: "")
+            amountEt.text = "Rs. ${tx.amount.toInt()}"
+            noteEt.text = tx.note?.ifBlank { "Tafseel (optional)" } ?: "Tafseel (optional)"
             dateTv.text = SimpleDateFormat("dd MMM, yy", Locale.getDefault()).format(Date(tx.date))
 
             editButton.setOnClickListener {

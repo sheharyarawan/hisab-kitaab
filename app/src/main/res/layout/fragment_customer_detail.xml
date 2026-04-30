@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:backgroundTint="#FBE8EA"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="false"
         xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -28,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="12dp">
 
             <TextView
@@ -38,14 +40,13 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Rs. 0"
                 android:textColor="#FF4B5F"
-                android:textSize="28sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvSummaryLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Maine lene hain"
                 android:textColor="#D45A63"
@@ -108,9 +109,10 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="#FF4B5F"
+            android:backgroundTint="#88EF0C23"
             android:fontFamily="@font/poppins_medium"
             android:text="MAINE DIYE"
+            android:textSize="17sp"
             android:textAllCaps="true"
             android:textColor="@android:color/white" />
 
@@ -120,9 +122,10 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:backgroundTint="#10B760"
+            android:backgroundTint="#B302803D"
             android:fontFamily="@font/poppins_medium"
             android:text="MAINE LIYE"
+            android:textSize="17sp"
             android:textAllCaps="true"
             android:textColor="@android:color/white" />
     </LinearLayout>

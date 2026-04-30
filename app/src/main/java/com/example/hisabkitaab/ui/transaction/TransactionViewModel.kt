@@ -7,6 +7,9 @@ import com.example.hisabkitaab.data.repository.TransactionRepository
 class TransactionViewModel(
     private val repository: TransactionRepository
 ) : ViewModel() {
+    suspend fun insertTransaction(transaction: Transaction) {
+        repository.insertTransaction(transaction)
+    }
 
     suspend fun getTransactionById(transactionId: Int): Transaction? {
         return repository.getTransactionById(transactionId)
