@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:paddingHorizontal="8dp"
-            app:title="@string/customer_toolbar_name"
+            app:title="SHEHARYAR"
             app:titleTextColor="@android:color/black"
             app:titleCentered="false" />
 
@@ -69,7 +69,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/poppins_medium"
-                            android:text="@string/customer_debit_label"
+                            android:text="Maine lene hain"
                             android:textColor="#E57373"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -110,7 +110,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/poppins_medium"
-                            android:text="@string/customer_credit_label"
+                            android:text="Maine dene hain"
                             android:textColor="#45B97C"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -126,7 +126,7 @@
                 android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="10dp"
-                android:hint="@string/search_customer_hint"
+                android:hint="Search Customer"
                 android:inputType="text"
                 android:fontFamily="@font/poppins_medium"
                 android:paddingHorizontal="12dp"
@@ -152,7 +152,7 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/black"
         android:fontFamily="@font/poppins_medium"
-        android:text="@string/add_customer"
+        android:text="ADD CUSTOMER"
         android:textAllCaps="true"
         android:textSize="17sp"
         android:textStyle="bold" />

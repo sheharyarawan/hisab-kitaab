@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
@@ -39,7 +41,12 @@ class CustomerFragment : Fragment() {
         val addButton = view.findViewById<Button>(R.id.btnAddCustomer)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CustomerAdapter()
+        adapter = CustomerAdapter { item ->
+            findNavController().navigate(
+                R.id.action_customerFragment_to_customerDetailFragment,
+                bundleOf("arg_customer_id" to item.customerId)
+            )
+        }
         recyclerView.adapter = adapter
 
         // Keeping add button inactive for now as requested.

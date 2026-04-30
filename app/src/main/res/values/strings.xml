@@ -8,4 +8,6 @@
     <string name="search_customer_hint">Search Customer</string>
     <string name="add_customer">Add Customer</string>
     <string name="more">More</string>
+    <string name="maine_diye">Maine Diye</string>
+    <string name="maine_liye">Maine Liye</string>
 </resources>

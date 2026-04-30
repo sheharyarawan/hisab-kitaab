@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/customerFragment">
+
+    <fragment
+        android:id="@+id/customerFragment"
+        android:name="com.example.hisabkitaab.ui.customer.CustomerFragment"
+        android:label="Customer">
+        <action
+            android:id="@+id/action_customerFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/customerDetailFragment"
+        android:name="com.example.hisabkitaab.ui.customer.CustomerDetailFragment"
+        android:label="Customer Detail" />
+
+</navigation>

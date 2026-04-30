@@ -12,7 +12,9 @@ import com.example.hisabkitaab.R
 import com.example.hisabkitaab.data.model.CustomerBalance
 import kotlin.math.abs
 
-class CustomerAdapter : ListAdapter<CustomerBalance, CustomerAdapter.CustomerViewHolder>(DiffCallback) {
+class CustomerAdapter(
+    private val onItemClick: (CustomerBalance) -> Unit
+) : ListAdapter<CustomerBalance, CustomerAdapter.CustomerViewHolder>(DiffCallback) {
 
     object DiffCallback : DiffUtil.ItemCallback<CustomerBalance>() {
         override fun areItemsTheSame(oldItem: CustomerBalance, newItem: CustomerBalance): Boolean {
@@ -26,14 +28,17 @@ class CustomerAdapter : ListAdapter<CustomerBalance, CustomerAdapter.CustomerVie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_customer, parent, false)
-        return CustomerViewHolder(view)
+        return CustomerViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: CustomerViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CustomerViewHolder(
+        itemView: View,
+        private val onItemClick: (CustomerBalance) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         private val initialsView: TextView = itemView.findViewById(R.id.tvInitials)
         private val nameView: TextView = itemView.findViewById(R.id.customerName)
         private val amountView: TextView = itemView.findViewById(R.id.tvAmount)
@@ -55,6 +60,10 @@ class CustomerAdapter : ListAdapter<CustomerBalance, CustomerAdapter.CustomerVie
             amountView.setTextColor(
                 Color.parseColor(if (item.netAmount >= 0) "#1B9C5A" else "#E53935")
             )
+
+            itemView.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 }
