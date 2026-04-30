@@ -42,9 +42,10 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:backgroundTint="#25EF8F8F"
-                    android:padding="12dp"
                     app:cardCornerRadius="12dp"
-                    app:cardUseCompatPadding="true">
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false"
+                    android:foreground="@null">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -54,10 +55,11 @@
                         android:padding="12dp">
 
                         <TextView
+                            android:id="@+id/tvTotalDebit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_medium"
-                            android:text="@string/customer_debit_amount"
+                            android:text="Rs. 0"
                             android:textColor="#E53935"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -80,9 +82,11 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:backgroundTint="#3894F499"
-                    android:padding="12dp"
                     app:cardCornerRadius="12dp"
-                    app:cardUseCompatPadding="true">
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false"
+                    android:foreground="@null"
+                   >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -92,10 +96,11 @@
                         android:padding="12dp">
 
                         <TextView
+                            android:id="@+id/tvTotalCredit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_medium"
-                            android:text="@string/customer_credit_amount"
+                            android:text="Rs. 0"
                             android:textColor="#1B9C5A"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -118,12 +123,14 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                android:background="@android:drawable/edit_text"
-                android:drawableStart="@android:drawable/ic_menu_search"
+                android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="10dp"
                 android:hint="@string/search_customer_hint"
                 android:inputType="text"
-                android:paddingHorizontal="12dp" />
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="12dp"
+                android:textColorHint="#B4000000"/>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
