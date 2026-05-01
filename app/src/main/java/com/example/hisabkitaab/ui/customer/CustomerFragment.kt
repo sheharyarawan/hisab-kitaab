@@ -13,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
@@ -43,6 +44,7 @@ class CustomerFragment : Fragment() {
         val db = KitaabDatabase(requireContext())
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         adapter = CustomerAdapter(
             onItemClick = { item ->
                 findNavController().navigate(

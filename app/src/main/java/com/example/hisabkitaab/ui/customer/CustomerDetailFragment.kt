@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
@@ -77,6 +78,8 @@ class CustomerDetailFragment : Fragment() {
 
         transactionsRv.layoutManager = LinearLayoutManager(requireContext())
         transactionsRv.adapter = transactionAdapter
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        transactionsRv.addItemDecoration(divider)
 
         diyeButton.setOnClickListener {
             findNavController().navigate(

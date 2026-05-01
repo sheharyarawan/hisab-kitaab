@@ -21,6 +21,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
@@ -73,6 +74,8 @@ class AddCustomerListFragment : Fragment() {
         adapter = AddCustomerAdapter { contact -> addContactAsCustomer(contact) }
         contactsRv.layoutManager = LinearLayoutManager(requireContext())
         contactsRv.adapter = adapter
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        contactsRv.addItemDecoration(divider)
 
         searchEt.doAfterTextChanged { applySearch(it?.toString().orEmpty()) }
         clearIv.setOnClickListener { searchEt.text?.clear() }
