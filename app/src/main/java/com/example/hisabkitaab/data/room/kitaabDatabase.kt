@@ -6,15 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.hisabkitaab.data.entity.Customer
 import com.example.hisabkitaab.data.entity.Transaction
+import com.example.hisabkitaab.data.entity.UserProfile
 
 @Database(
-    entities = [Customer::class, Transaction::class],
-    version = 1
+    entities = [Customer::class, Transaction::class,UserProfile::class],
+    version = 2
 )
 abstract class KitaabDatabase : RoomDatabase() {
 
     abstract fun getCustomerDao(): CustomerDao
     abstract fun getTransactionDao(): TransactionDao
+    abstract fun profileDao(): ProfileDao
 
     companion object {
 

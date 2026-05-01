@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hisabkitaab.R
+import com.example.hisabkitaab.data.entity.UserProfile
 import com.example.hisabkitaab.data.model.CustomerBalance
 import com.example.hisabkitaab.data.room.KitaabDatabase
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,11 @@ class CustomerFragment : Fragment() {
         val db = KitaabDatabase(requireContext())
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val toolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbarCustomer)
+        toolbar.setOnClickListener {
+            showProfileDialog()
+        }
 
         adapter = CustomerAdapter(
             onItemClick = { item ->
@@ -81,14 +87,16 @@ class CustomerFragment : Fragment() {
             loadCustomerRows(totalDebitView, totalCreditView)
         }
     }
-
     override fun onResume() {
         super.onResume()
+
         val root = view ?: return
-        val totalDebitView = root.findViewById<TextView>(R.id.tvTotalDebit)
-        val totalCreditView = root.findViewById<TextView>(R.id.tvTotalCredit)
+        val debit = root.findViewById<TextView>(R.id.tvTotalDebit)
+        val credit = root.findViewById<TextView>(R.id.tvTotalCredit)
+
         lifecycleScope.launch {
-            loadCustomerRows(totalDebitView, totalCreditView)
+            loadCustomerRows(debit, credit)
+            updateToolbarName()
         }
     }
 
@@ -155,5 +163,65 @@ class CustomerFragment : Fragment() {
             .create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
+    }
+    private fun saveProfileName(name: String) {
+
+        val db = KitaabDatabase(requireContext())
+
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            db.profileDao().insertProfile(
+                UserProfile(id = 1, name = name)
+            )
+
+            withContext(Dispatchers.Main) {
+                updateToolbarName()
+            }
+        }
+    }
+
+    private fun updateToolbarName() {
+
+        val db = KitaabDatabase(requireContext())
+        val toolbar = view?.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbarCustomer)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            val profile = db.profileDao().getProfile()
+
+            withContext(Dispatchers.Main) {
+
+                toolbar?.title = "${profile?.name}   ⌄" ?: "Your Name   ⌄"
+            }
+        }
+    }
+    private fun showProfileDialog() {
+
+        val input = EditText(requireContext())
+        input.hint = "Enter your name"
+
+        val db = KitaabDatabase(requireContext())
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val existing = db.profileDao().getProfile()
+
+            withContext(Dispatchers.Main) {
+
+                input.setText(existing?.name ?: "")
+
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Profile Name")
+                    .setView(input)
+                    .setPositiveButton("Save") { dialog, _ ->
+
+                        val name = input.text.toString()
+                        saveProfileName(name)
+
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        }
     }
 }

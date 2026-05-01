@@ -17,8 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:paddingHorizontal="8dp"
-            app:title="SHEHARYAR"
-            app:titleTextColor="@android:color/black"
+            app:titleTextColor="#C0000000"
             app:titleCentered="false" />
 
         <LinearLayout
