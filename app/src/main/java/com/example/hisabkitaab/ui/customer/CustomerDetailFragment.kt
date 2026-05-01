@@ -67,8 +67,6 @@ class CustomerDetailFragment : Fragment() {
         val customerId = arguments?.getInt(ARG_CUSTOMER_ID) ?: return
 
         val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbarCustomerDetail)
-        val summaryAmountView = view.findViewById<TextView>(R.id.tvSummaryAmount)
-        val summaryLabelView = view.findViewById<TextView>(R.id.tvSummaryLabel)
         val transactionsRv = view.findViewById<RecyclerView>(R.id.recyclerViewTransactions)
         val diyeButton = view.findViewById<Button>(R.id.btnMaineDiye)
         val liyeButton = view.findViewById<Button>(R.id.btnMaineLiye)

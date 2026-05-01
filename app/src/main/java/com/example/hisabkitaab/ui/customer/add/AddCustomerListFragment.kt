@@ -70,6 +70,7 @@ class AddCustomerListFragment : Fragment() {
 
         toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        toolbar.title= "Add Customer"
 
         adapter = AddCustomerAdapter { contact -> addContactAsCustomer(contact) }
         contactsRv.layoutManager = LinearLayoutManager(requireContext())

@@ -43,6 +43,7 @@ class AddCustomerManualFragment : Fragment() {
 
         toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        toolbar.title= "Add Customer"
 
         addButton.setOnClickListener {
             val name = nameEt.text?.toString()?.trim().orEmpty()

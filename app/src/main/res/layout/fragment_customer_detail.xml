@@ -12,6 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         android:elevation="0dp"
+
         android:titleTextColor="@android:color/black" />
 
     <androidx.cardview.widget.CardView
