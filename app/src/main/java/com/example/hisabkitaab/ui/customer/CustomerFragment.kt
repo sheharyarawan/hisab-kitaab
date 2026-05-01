@@ -191,7 +191,7 @@ class CustomerFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
 
-                toolbar?.title = "${profile?.name}   ⌄" ?: "Your Name   ⌄"
+                toolbar?.title = "${profile?.name}  ⌄" ?: "Your Name  ˅"
             }
         }
     }
